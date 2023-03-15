@@ -1,19 +1,18 @@
 ﻿using ActivityService.Application.Common.Interfaces;
+using ActivityService.Application.Features.Activities.Commands.CreateActivity;
 using ActivityService.Domain.ActivityAggregate;
-using ActivityService.Domain.Common;
 using MediatR;
-using System.Reflection.Metadata;
 
-namespace ActivityService.Application.Features.Activities.Commands.CreateActivity;
+namespace ActivityService.Application.Features.Activities.Commands.UpdateActivity;
 
-internal class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand, Activity>
+internal class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand, Activity>
 {
     private readonly IRepository<Activity> _activityReposioty;
 
-    public async Task<Activity> Handle(CreateActivityCommand command, CancellationToken cancellationToken)
+    public async Task<Activity> Handle(UpdateActivityCommand command, CancellationToken cancellationToken)
     {
         var activity = new Activity(
-            Guid.NewGuid(),
+            command.Id,
             command.StartDateTime,
             command.EndDateTime,
             command.Name,
@@ -21,12 +20,12 @@ internal class CreateActivityCommandHandler : IRequestHandler<CreateActivityComm
             command.PreviewImageId,
             command.RoomId);
 
-        _activityReposioty.Insert(activity);
+        _activityReposioty.Update(activity);
 
         return activity;
     }
 
-    public CreateActivityCommandHandler(IRepository<Activity> activityReposioty)
+    public UpdateActivityCommandHandler(IRepository<Activity> activityReposioty)
     {
         _activityReposioty = activityReposioty;
     }

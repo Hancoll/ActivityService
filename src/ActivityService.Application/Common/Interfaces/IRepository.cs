@@ -1,22 +1,21 @@
 ﻿using ActivityService.Domain.Common;
-using ActivityService.Domain.Common.Interfaces;
 
 namespace ActivityService.Application.Common.Interfaces;
 
-public interface IRepository<TEntity> where TEntity : Entity, IAggregateRoot
+public interface IRepository<TEntity> where TEntity : Entity
 {
     void Insert(TEntity entity);
 
     void Insert(IEnumerable<TEntity> entities);
 
-    void Remove(TEntity entity);
-
-    void Delete(TEntity entity);
+    void Remove(Guid id);
 
     void Update(TEntity entity);
 
-    TEntity? GetEntity(Specification<TEntity> filter);
+    bool IsExists(Guid id);
 
-    IEnumerable<TEntity> GetEntities(Specification<TEntity> filter);
+    TEntity? GetEntity(Specification<TEntity>? filter = null);
+
+    IEnumerable<TEntity> GetEntities(Specification<TEntity>? filter = null, int? from = null, int? size = null);
 }
 

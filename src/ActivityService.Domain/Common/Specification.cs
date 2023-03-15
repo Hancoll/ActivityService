@@ -1,5 +1,4 @@
-﻿using ActivityService.Domain.Common.Interfaces;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace ActivityService.Domain.Common;
 

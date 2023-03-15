@@ -9,7 +9,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
-        services.AddScoped<IRepository<Activity>, InMemoryRepository<Activity>>();
+        services.AddSingleton<IRepository<Activity>, InMemoryRepository<Activity>>();
 
         return services;
     }

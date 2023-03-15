@@ -1,27 +1,35 @@
 ﻿using ActivityService.Application.Common.Interfaces;
 using ActivityService.Domain.Common;
-using ActivityService.Domain.Common.Interfaces;
-using System.Data.SqlTypes;
 
 namespace ActivityService.Infrastructure.Persistence;
 
-internal class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : Entity, IAggregateRoot
+internal class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : Entity
 {
     private readonly List<TEntity> _entitites = new List<TEntity>();
 
-    public void Delete(TEntity entity)
+    public void Remove(Guid id)
     {
-        throw new NotImplementedException();
+        var entity = _entitites.Find(x => x.Id == id);
+        _entitites.Remove(entity);
     }
 
-    public IEnumerable<TEntity> GetEntities(Specification<TEntity> filter)
+    public IEnumerable<TEntity> GetEntities(Specification<TEntity>? filter = null, int? from = null, int? size = null)
     {
-        throw new NotImplementedException();
+        var result = _entitites
+                .Where(x => filter is null ? true : filter.IsSatisfiedBy(x))
+                .Skip(from is null ? 0 : (int)from);
+
+        if (size is not null)
+            return result.Take((int)size);
+
+        return result;
     }
 
-    public TEntity? GetEntity(Specification<TEntity> filter)
+    public TEntity? GetEntity(Specification<TEntity>? filter)
     {
-        return _entitites.Where(x => filter.IsSatisfiedBy(x)).FirstOrDefault();
+        return _entitites
+            .Where(x => filter is null ? true : filter.IsSatisfiedBy(x))
+            .FirstOrDefault();
     }
 
     public void Insert(TEntity entity)
@@ -31,19 +39,20 @@ internal class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity 
 
     public void Insert(IEnumerable<TEntity> entities)
     {
-        foreach(var entity in entities)
+        foreach (var entity in entities)
         {
             Insert(entity);
         }
     }
 
-    public void Remove(TEntity entity)
+    public bool IsExists(Guid id)
     {
-        _entitites.Remove(entity);
+        return _entitites.Where(x => x.Id == id).Any();
     }
 
     public void Update(TEntity entity)
     {
-        throw new NotImplementedException();
+        Remove(entity.Id);
+        Insert(entity);
     }
 }

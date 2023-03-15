@@ -1,9 +1,8 @@
 ﻿using ActivityService.Domain.Common;
-using ActivityService.Domain.Common.Interfaces;
 
 namespace ActivityService.Domain.ActivityAggregate;
 
-public class Activity : Entity, IAggregateRoot
+public class Activity : Entity
 {
     public DateTime StartDateTime { get; set; }
 

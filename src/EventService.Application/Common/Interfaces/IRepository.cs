@@ -1,6 +1,6 @@
-﻿using ActivityService.Domain.Common;
+﻿using EventService.Domain.Common;
 
-namespace ActivityService.Application.Common.Interfaces;
+namespace EventService.Application.Common.Interfaces;
 
 public interface IRepository<TEntity> where TEntity : Entity
 {

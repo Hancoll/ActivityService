@@ -1,8 +1,8 @@
-﻿namespace ActivityService.Application.Features.Images;
+﻿namespace EventService.Application.Features.Images;
 
 public class ImagesService
 {
-    private readonly List<Guid> _images = new List<Guid>() { Guid.NewGuid() };
+    private readonly List<Guid> _images = new() { Guid.NewGuid() };
 
     public Guid GetRandomImageId()
     {

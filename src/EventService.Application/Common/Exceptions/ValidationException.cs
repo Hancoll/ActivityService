@@ -1,13 +1,13 @@
 ﻿using FluentValidation.Results;
-using System.Net;
+using SC.Internship.Common.Exceptions;
 
-namespace ActivityService.Application.Common.Exceptions;
+namespace EventService.Application.Common.Exceptions;
 
-public class ValidationException : Exception
+public class ValidationException : ScException
 {
     public List<ValidationFailure> Errors { get; }
 
-    public ValidationException(List<ValidationFailure> errors)
+    public ValidationException(List<ValidationFailure> errors) : base(null)
     {
         Errors = errors;
     }

@@ -1,37 +1,41 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using EventService.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SC.Internship.Common.Exceptions;
+using SC.Internship.Common.ScResult;
 
-namespace ActivityService.Api.Filters;
+namespace EventService.Api.Filters;
 
 public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
 {
     public override void OnException(ExceptionContext context)
     {
         var exception = context.Exception;
-        
-        ProblemDetails problemDetails;
 
-        if(exception is ValidationException validationException)
+        if (exception is not ScException)
+            return;
+
+        ObjectResult objectResult;
+
+        if (exception is ValidationException validationException)
         {
-            var modelStatieDectionary = new ModelStateDictionary();
+            var modelStateDictionary = new Dictionary<string, List<string>>();
 
             foreach (var error in validationException.Errors)
             {
-                modelStatieDectionary.AddModelError(error.ErrorCode, error.ErrorMessage);
+                if (!modelStateDictionary.ContainsKey(error.ErrorCode))
+                    modelStateDictionary.Add(error.ErrorCode, new());
+
+                modelStateDictionary[error.ErrorCode].Add(error.ErrorMessage);
             }
 
-            problemDetails = new ValidationProblemDetails(modelStatieDectionary);
+            var result = new ScResult(new ScError { Message = "Validation fault", ModelState = modelStateDictionary });
+            objectResult = new ObjectResult(result);
         }
-
         else
-            problemDetails = new ProblemDetails { Detail = exception.Message};
+            objectResult = new ObjectResult(exception.Message);
 
-        context.Result = new ObjectResult(problemDetails);
-
+        context.Result = objectResult;
         context.ExceptionHandled = true;
     }
 }

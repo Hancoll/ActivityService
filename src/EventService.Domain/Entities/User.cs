@@ -1,13 +1,13 @@
-﻿using ActivityService.Domain.Common;
+﻿using EventService.Domain.Common;
 
-namespace ActivityService.Domain.Entities;
+namespace EventService.Domain.Entities;
 
 public class User : Entity
 {
-    public string NickName { get; set; }
+    public string Nickname { get; set; }
 
-    public User(Guid id, string nickName) : base(id)
+    public User(Guid id, string nickname) : base(id)
     {
-        NickName = nickName;
+        Nickname = nickname;
     }
 }

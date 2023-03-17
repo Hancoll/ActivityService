@@ -1,14 +1,15 @@
-﻿using ActivityService.Application.Common.Behaviors;
-using ActivityService.Application.Features.Activities.Commands.CreateActivity;
-using ActivityService.Application.Features.Activities.Commands.UpdateActivity;
-using ActivityService.Application.Features.Activities.Queries.SearchActivities;
-using ActivityService.Application.Features.Images;
-using ActivityService.Application.Features.Rooms;
+﻿using EventService.Application.Common.Behaviors;
+using EventService.Application.Features.Events.Commands.AddEvent;
+using EventService.Application.Features.Events.Commands.UpdateEvent;
+using EventService.Application.Features.Events.Queries.GetEvents;
+using EventService.Application.Features.Images;
+using EventService.Application.Features.Rooms;
+using EventService.Application.Features.Tickets.Commands.IssueTicketToUser;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ActivityService.Application;
+namespace EventService.Application;
 
 public static class DependencyInjection
 {
@@ -20,9 +21,10 @@ public static class DependencyInjection
         services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-        services.AddScoped<IValidator<CreateActivityCommand>, CreateActivityCommandValidator>();
-        services.AddScoped<IValidator<SearchActivitiesQuery>, SearchActivitiesQueryValidator>();
-        services.AddScoped<IValidator<UpdateActivityCommand>, UpdateActivityCommandValidator>();
+        services.AddScoped<IValidator<AddEventCommand>, AddEventCommandValidator>();
+        services.AddScoped<IValidator<GetEventsQuery>, GetEventsQueryValidator>();
+        services.AddScoped<IValidator<UpdateEventCommand>, UpdateEventCommandValidator>();
+        services.AddScoped<IValidator<IssueTicketToUserCommand>, IssueTicketToUserCommandValidator>();
 
         // Fix
         //services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

@@ -1,11 +1,11 @@
-﻿using ActivityService.Application.Common.Interfaces;
-using ActivityService.Domain.Common;
+﻿using EventService.Application.Common.Interfaces;
+using EventService.Domain.Common;
 
-namespace ActivityService.Infrastructure.Persistence;
+namespace EventService.Infrastructure.Persistence;
 
 internal class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : Entity
 {
-    private readonly List<TEntity> _entitites = new List<TEntity>();
+    private readonly List<TEntity> _entitites = new();
 
     public TEntity? GetEntity(Guid id)
     {
@@ -58,6 +58,6 @@ internal class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity 
 
     public bool IsExists(Guid id)
     {
-        return _entitites.Where(x => x.Id == id).Any();
+        return _entitites.Any(x => x.Id == id);
     }
 }

@@ -1,13 +1,15 @@
-﻿using ActivityService.Domain.Common;
+﻿using EventService.Domain.Common;
 
-namespace ActivityService.Domain.Entities;
+namespace EventService.Domain.Entities;
 
 public class Ticket : Entity
 {
-    public Guid Owner { get; set; }
+    public Guid? Owner { get; set; } = null!;
 
-    public Ticket(Guid id, Guid owner) : base(id)
+    public Event Event { get; set; }
+
+    public Ticket(Guid id, Event @event) : base(id)
     {
-        Owner = owner;
+        Event = @event;
     }
 }

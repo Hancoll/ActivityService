@@ -1,6 +1,6 @@
-using ActivityService.Api.Filters;
-using ActivityService.Application;
-using ActivityService.Infrastructure;
+using EventService.Api.Filters;
+using EventService.Application;
+using EventService.Infrastructure;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 

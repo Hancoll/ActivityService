@@ -1,8 +1,8 @@
-﻿namespace ActivityService.Application.Features.Rooms;
+﻿namespace EventService.Application.Features.Rooms;
 
 public class RoomsService
 {
-    private readonly List<Guid> _rooms = new List<Guid>() { Guid.NewGuid() };
+    private readonly List<Guid> _rooms = new() { Guid.NewGuid() };
 
     public Guid GetRandomRoomId()
     {

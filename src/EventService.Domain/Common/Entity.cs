@@ -1,4 +1,4 @@
-﻿namespace ActivityService.Domain.Common;
+﻿namespace EventService.Domain.Common;
 
 public class Entity
 {

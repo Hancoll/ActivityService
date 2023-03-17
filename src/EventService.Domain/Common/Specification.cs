@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace ActivityService.Domain.Common;
+namespace EventService.Domain.Common;
 
 public abstract class Specification<TEntity> where TEntity : Entity
 {

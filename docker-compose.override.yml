@@ -1,20 +1,26 @@
 version: '3.4'
 
 services:
-  eventservice.api:
+  eventsservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - "DatabaseSettings:ConnectionSting=mongodb://eventdb:27017"
     ports:
       - "80"
-      - "443"
+    depends_on:
+      - eventdb
+
+  eventdb:
+    container_name: event_db
+    restart: always
+    ports:
+      - "27017"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - eventdb_data:/data/db
+
   jwttokengenerator:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "80"
-  

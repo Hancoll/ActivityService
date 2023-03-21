@@ -1,10 +1,18 @@
 version: '3.4'
 
 services:
-  eventservice.api:
-    image: ${DOCKER_REGISTRY-}eventserviceapi
+  eventsservice:
+    image: ${DOCKER_REGISTRY-}eventsservice
     build:
       context: .
-      dockerfile: src/EventService.Api/Dockerfile
+      dockerfile: src/EventsService/Dockerfile
+
+  eventdb:
+     image: mongo
+
   jwttokengenerator:
     image: hancoll/jwttokengeneratorapi:latest
+
+volumes:
+  eventdb_data:
+    

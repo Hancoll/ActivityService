@@ -17,7 +17,7 @@ public class IssueTicketToUserCommandHandler : IRequestHandler<IssueTicketToUser
 
         if (@event.HasPlaces)
         {
-            if(request.Place is null) throw new ArgumentNullException(nameof(request.Place));
+            if (request.Place is null) throw new ArgumentNullException(nameof(request.Place));
 
             ticket = @event.Tickets[(int)request.Place - 1];
             ticket.Place = request.Place;

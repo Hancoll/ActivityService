@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using JetBrains.Annotations;
+using MediatR;
 
 namespace EventsService.Features.Events.UpdateEvent;
 
+[UsedImplicitly]
 public class UpdateEventCommandHandler : IRequestHandler<UpdateEventCommand, Event>
 {
     private readonly IEventRepository _eventRepository;

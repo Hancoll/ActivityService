@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using JetBrains.Annotations;
+using MediatR;
 
 namespace EventsService.Features.Events.GetEvents;
 
+[UsedImplicitly]
 public class GetEventsQueryHandler : IRequestHandler<GetEventsQuery, IEnumerable<Event>>
 {
     private readonly IEventRepository _eventRepository;

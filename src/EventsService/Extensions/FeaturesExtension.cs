@@ -2,11 +2,6 @@
 using FluentValidation;
 using MediatR;
 using System.Reflection;
-using EventsService.Features.Events.AddEvent;
-using EventsService.Features.Events.GetEvents;
-using EventsService.Features.Events.UpdateEvent;
-using EventsService.Features.Tickets.AddTicketsToEvent;
-using EventsService.Features.Tickets.IssueTicketToUser;
 
 namespace EventsService.Extensions;
 

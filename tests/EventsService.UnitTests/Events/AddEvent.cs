@@ -1,5 +1,4 @@
-﻿using EventsService.Features.Events;
-using EventsService.Features.Events.AddEvent;
+﻿using EventsService.Features.Events.AddEvent;
 using EventsService.Services;
 using Moq;
 

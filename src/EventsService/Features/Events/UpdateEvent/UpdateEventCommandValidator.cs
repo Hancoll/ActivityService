@@ -1,8 +1,10 @@
 ﻿using EventsService.Services;
 using FluentValidation;
+using JetBrains.Annotations;
 
 namespace EventsService.Features.Events.UpdateEvent;
 
+[UsedImplicitly]
 public class UpdateEventCommandValidator : AbstractValidator<UpdateEventCommand>
 {
     public UpdateEventCommandValidator(IEventRepository eventRepository, IImagesService imagesService, IRoomsService roomsService)

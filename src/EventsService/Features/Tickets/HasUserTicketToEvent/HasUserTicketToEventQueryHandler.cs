@@ -1,8 +1,10 @@
 ﻿using EventsService.Features.Events;
+using JetBrains.Annotations;
 using MediatR;
 
 namespace EventsService.Features.Tickets.HasUserTicketToEvent;
 
+[UsedImplicitly]
 public class HasUserTicketToEventQueryHandler : IRequestHandler<HasUserTicketToEventQuery, bool>
 {
     private readonly IEventRepository _eventRepository;

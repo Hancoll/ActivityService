@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using JetBrains.Annotations;
+using MediatR;
 
 namespace EventsService.Features.Events.DeleteEvent;
 
+[UsedImplicitly]
 public class DeleteEventCommandHandler : IRequestHandler<DeleteEventCommand>
 {
     private readonly IEventRepository _eventRepository;

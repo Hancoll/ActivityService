@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using JetBrains.Annotations;
+using MediatR;
 
 namespace EventsService.Features.Events.AddEvent;
 
+[UsedImplicitly]
 public class AddEventCommandHandler : IRequestHandler<AddEventCommand, Event>
 {
     private readonly IEventRepository _eventRepository;

@@ -9,7 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventsService", "src\Events
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{90E09CBC-9686-4D47-BE7A-6409BAAAD72A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventsService.UnitTests", "tests\EventsService.UnitTests\EventsService.UnitTests.csproj", "{F4DFDC54-38F3-4AEB-A5AC-5900A7A87296}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventsService.UnitTests", "tests\EventsService.UnitTests\EventsService.UnitTests.csproj", "{F4DFDC54-38F3-4AEB-A5AC-5900A7A87296}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagesService", "src\ImagesService\ImagesService.csproj", "{85C00931-65F2-467D-8722-B6B63A17FD21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpacesService", "src\SpacesService\SpacesService.csproj", "{0655F841-A3BA-4468-9939-92EAA738D4F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentsService", "src\PaymentsService\PaymentsService.csproj", "{841A7528-43C2-4B13-BD6C-D7B7C7B54004}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7644EE99-2B79-4DF8-BEB9-F1AD70789983}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +41,24 @@ Global
 		{F4DFDC54-38F3-4AEB-A5AC-5900A7A87296}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4DFDC54-38F3-4AEB-A5AC-5900A7A87296}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4DFDC54-38F3-4AEB-A5AC-5900A7A87296}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85C00931-65F2-467D-8722-B6B63A17FD21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85C00931-65F2-467D-8722-B6B63A17FD21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85C00931-65F2-467D-8722-B6B63A17FD21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85C00931-65F2-467D-8722-B6B63A17FD21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0655F841-A3BA-4468-9939-92EAA738D4F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0655F841-A3BA-4468-9939-92EAA738D4F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0655F841-A3BA-4468-9939-92EAA738D4F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0655F841-A3BA-4468-9939-92EAA738D4F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{841A7528-43C2-4B13-BD6C-D7B7C7B54004}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{841A7528-43C2-4B13-BD6C-D7B7C7B54004}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{841A7528-43C2-4B13-BD6C-D7B7C7B54004}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{841A7528-43C2-4B13-BD6C-D7B7C7B54004}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F4DFDC54-38F3-4AEB-A5AC-5900A7A87296} = {7644EE99-2B79-4DF8-BEB9-F1AD70789983}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {29FF8084-E416-42B9-B0A3-5B81370287D2}

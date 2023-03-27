@@ -8,20 +8,23 @@ public class UpdateEventCommandHandler : IRequestHandler<UpdateEventCommand, Eve
 {
     private readonly IEventRepository _eventRepository;
 
-    public async Task<Event> Handle(UpdateEventCommand command, CancellationToken cancellationToken)
+    public Task<Event> Handle(UpdateEventCommand command, CancellationToken cancellationToken)
     {
-        var activity = new Event(
+        var @event = new Event(
+            command.Id,
             command.StartDateTime,
             command.EndDateTime,
             command.Name,
             command.Description,
             command.PreviewImageId,
             command.RoomId,
-            command.HasPlaces);
+            command.Tickets,
+            command.HasPlaces,
+            command.Price);
 
-        _eventRepository.Update(activity);
+        _eventRepository.Update(@event);
 
-        return activity;
+        return Task.FromResult(@event);
     }
 
     public UpdateEventCommandHandler(IEventRepository eventRepository)

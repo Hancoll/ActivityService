@@ -9,9 +9,30 @@ services:
 
   eventdb:
      image: mongo
+    
+  imagesservice:
+    image: ${DOCKER_REGISTRY-}imagesservice
+    build:
+      context: .
+      dockerfile: src/ImagesService/Dockerfile
+
+  spacesservice:
+    image: ${DOCKER_REGISTRY-}spacesservice
+    build:
+      context: .
+      dockerfile: src/SpacesService/Dockerfile
+
+  paymentsservice:
+    image: ${DOCKER_REGISTRY-}paymentsservice
+    build:
+      context: .
+      dockerfile: src/PaymentsService/Dockerfile
 
   jwttokengenerator:
     image: hancoll/jwttokengeneratorapi:latest
+
+  rabbitmq:
+    image: rabbitmq:3-management
 
 volumes:
   eventdb_data:

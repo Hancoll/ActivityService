@@ -12,11 +12,6 @@ public class EventRepository : IEventRepository
         _context.Events.InsertOne(@event);
     }
 
-    public void Delete(Guid id)
-    {
-        _context.Events.DeleteOne(x => x.Id == id);
-    }
-
     public Event GetEvent(Guid id)
     {
         return _context.Events.Find(x => x.Id == id).First();
@@ -36,14 +31,29 @@ public class EventRepository : IEventRepository
         return result.ToList();
     }
 
-    public bool IsExists(Guid id)
+    public void Delete(Guid id)
     {
-        return _context.Events.Find(x => x.Id == id).Any();
+        _context.Events.DeleteOne(x => x.Id == id);
+    }
+
+    public void Delete(FilterDefinition<Event> filter)
+    {
+        _context.Events.DeleteMany(filter);
     }
 
     public void Update(Event @event)
     {
         _context.Events.ReplaceOne(e => e.Id == @event.Id, @event);
+    }
+
+    public void Update(FilterDefinition<Event> filter, UpdateDefinition<Event> update)
+    {
+        _context.Events.UpdateMany(filter, update);
+    }
+
+    public bool IsExists(Guid id)
+    {
+        return _context.Events.Find(x => x.Id == id).Any();
     }
 
     public EventRepository(IApplicationContext context)

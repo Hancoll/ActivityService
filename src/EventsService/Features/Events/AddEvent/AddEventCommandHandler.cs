@@ -8,20 +8,23 @@ public class AddEventCommandHandler : IRequestHandler<AddEventCommand, Event>
 {
     private readonly IEventRepository _eventRepository;
 
-    public async Task<Event> Handle(AddEventCommand command, CancellationToken cancellationToken)
+    public Task<Event> Handle(AddEventCommand command, CancellationToken cancellationToken)
     {
         var eventEntity = new Event(
+            Guid.NewGuid(),
             command.StartDateTime,
             command.EndDateTime,
             command.Name,
             command.Description,
             command.PreviewImageId,
             command.RoomId,
-            command.HasPlaces);
+            new List<Tickets.Ticket>(),
+            command.HasPlaces,
+            command.Price);
 
         _eventRepository.Add(eventEntity);
 
-        return eventEntity;
+        return Task.FromResult(eventEntity);
     }
 
     public AddEventCommandHandler(IEventRepository eventRepository)

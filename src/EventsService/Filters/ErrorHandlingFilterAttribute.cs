@@ -24,7 +24,7 @@ public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
             foreach (var error in validationException.Errors)
             {
                 if (!modelStateDictionary.ContainsKey(error.ErrorCode))
-                    modelStateDictionary.Add(error.ErrorCode, new());
+                    modelStateDictionary.Add(error.ErrorCode, new List<string>());
 
                 modelStateDictionary[error.ErrorCode].Add(error.ErrorMessage);
             }

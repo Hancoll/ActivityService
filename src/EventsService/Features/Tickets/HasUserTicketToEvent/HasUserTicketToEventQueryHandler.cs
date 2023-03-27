@@ -9,17 +9,17 @@ public class HasUserTicketToEventQueryHandler : IRequestHandler<HasUserTicketToE
 {
     private readonly IEventRepository _eventRepository;
 
-    public async Task<bool> Handle(HasUserTicketToEventQuery request, CancellationToken cancellationToken)
+    public Task<bool> Handle(HasUserTicketToEventQuery request, CancellationToken cancellationToken)
     {
         var eventTickets = _eventRepository.GetEvent(request.EventId).Tickets;
 
         foreach (var ticket in eventTickets)
         {
             if (ticket.Owner == request.UserId)
-                return true;
+                return Task.FromResult(true);
         }
 
-        return false;
+        return Task.FromResult(false);
     }
 
     public HasUserTicketToEventQueryHandler(IEventRepository eventRepository)

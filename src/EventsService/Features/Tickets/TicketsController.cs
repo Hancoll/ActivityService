@@ -1,6 +1,7 @@
 ﻿using EventsService.Features.Tickets.AddTicketsToEvent;
 using EventsService.Features.Tickets.HasUserTicketToEvent;
 using EventsService.Features.Tickets.IssueTicketToUser;
+using EventsService.Features.Tickets.SellTicketToUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SC.Internship.Common.ScResult;
@@ -13,6 +14,13 @@ namespace EventsService.Features.Tickets;
 public class TicketsController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<TicketsController> _logger;
+
+    public TicketsController(IMediator mediator, ILogger<TicketsController> logger)
+    {
+        _mediator = mediator;
+        _logger = logger;
+    }
 
     /// <summary>
     /// Добавить билеты для мероприятия
@@ -23,21 +31,51 @@ public class TicketsController : ControllerBase
         var command = new AddTicketsToEventCommand(eventId, request.Count);
         await _mediator.Send(command);
 
+        _logger.LogInformation($"Tickets added to event {eventId}");
+
         return new ScResult();
     }
 
     /// <summary>
     /// Выдать билет пользователю на мероприятие
     /// </summary>
-    [HttpPost("users/{userId:guid}/events/{eventId:guid}")]
-    public async Task<ScResult<TicketDto>> IssueTicket(Guid userId, Guid eventId, IssueTicketRequest request)
+    [HttpPost("users/{userId:guid}/events/{eventId:guid}/issue")]
+    public async Task<ScResult<Ticket>> IssueTicket(Guid userId, Guid eventId, IssueTicketRequest request)
     {
         var command = new IssueTicketToUserCommand(userId, eventId, request.Place);
         var issueTicketResult = await _mediator.Send(command);
 
-        var response = new TicketDto(issueTicketResult.Id, issueTicketResult.Owner, issueTicketResult.Place);
+        var response = new Ticket 
+        { 
+            Id = issueTicketResult.Id,  
+            Owner = issueTicketResult.Owner, 
+            Place = issueTicketResult.Place 
+        };
 
-        return new ScResult<TicketDto>(response);
+        _logger.LogInformation($"Ticket issued to user {userId} to event {eventId}");
+
+        return new ScResult<Ticket>(response);
+    }
+
+    /// <summary>
+    /// Продать билет пользователю на мероприятие
+    /// </summary>
+    [HttpPost("users/{userId:guid}/events/{eventId:guid}/sell")]
+    public async Task<ScResult<Ticket>> SellTicket(Guid userId, Guid eventId, IssueTicketRequest request)
+    {
+        var command = new SellTicketToUserCommand(userId, eventId, request.Place);
+        var sellTicketResult = await _mediator.Send(command);
+
+        var response = new Ticket
+        {
+            Id = sellTicketResult.Id,
+            Owner = sellTicketResult.Owner,
+            Place = sellTicketResult.Place
+        };
+
+        _logger.LogInformation($"Ticket sold to user {userId} to event {eventId}");
+
+        return new ScResult<Ticket>(response);
     }
 
     /// <summary>
@@ -49,13 +87,6 @@ public class TicketsController : ControllerBase
         var query = new HasUserTicketToEventQuery(userId, eventId);
         var hasUserTicketToEventResult = await _mediator.Send(query);
 
-        var response = hasUserTicketToEventResult;
-
-        return new ScResult<bool>(response);
-    }
-
-    public TicketsController(IMediator mediator)
-    {
-        _mediator = mediator;
+        return new ScResult<bool>(hasUserTicketToEventResult);
     }
 }

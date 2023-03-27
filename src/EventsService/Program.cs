@@ -1,17 +1,31 @@
 using System.Reflection;
 using EventsService.Extensions;
 using EventsService.Filters;
+using EventsService.Infrastructure.RabbitMq;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddFeatures()
-    .AddServices()
+    .AddServices(builder.Configuration)
     .AddPersistence(builder.Configuration)
     .AddAuth(builder.Configuration);
 builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
+// Cors
+const string allowSpecificationOrigins = "_allowSpecificationOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: allowSpecificationOrigins, b =>
+    {
+        b.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddSwaggerGen(options =>
 {
     var file = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -43,10 +57,17 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+// RabbitMq
+builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection(RabbitMqSettings.SectionName));
+builder.Services.AddHostedService<RabbitMqListener>();
+builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
+
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseCors(allowSpecificationOrigins);
 
 app.UseAuthentication();
 app.UseAuthorization();

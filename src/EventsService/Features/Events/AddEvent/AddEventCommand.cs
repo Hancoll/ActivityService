@@ -7,6 +7,7 @@ public record AddEventCommand(
     DateTime EndDateTime,
     string Name,
     string Description,
-    Guid PreviewImageId,
+    Guid? PreviewImageId,
     Guid RoomId,
-    bool HasPlaces) : IRequest<Event>;
+    bool HasPlaces,
+    decimal? Price) : IRequest<Event>;

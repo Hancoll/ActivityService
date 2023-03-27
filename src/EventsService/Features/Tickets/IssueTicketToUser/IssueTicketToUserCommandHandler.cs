@@ -10,10 +10,10 @@ public class IssueTicketToUserCommandHandler : IRequestHandler<IssueTicketToUser
 {
     private readonly IEventRepository _eventRepository;
 
-    public async Task<Ticket> Handle(IssueTicketToUserCommand request, CancellationToken cancellationToken)
+    public Task<Ticket> Handle(IssueTicketToUserCommand request, CancellationToken cancellationToken)
     {
         var @event = _eventRepository.GetEvent(request.EventId);
-        Ticket? ticket = null;
+        Ticket? ticket;
 
         if (@event.HasPlaces)
         {
@@ -23,7 +23,8 @@ public class IssueTicketToUserCommandHandler : IRequestHandler<IssueTicketToUser
             ticket.Place = request.Place;
             ticket.Owner = request.UserId;
             _eventRepository.Update(@event);
-            return ticket;
+
+            return Task.FromResult(ticket);
         }
 
         foreach (var t in @event.Tickets)
@@ -34,7 +35,8 @@ public class IssueTicketToUserCommandHandler : IRequestHandler<IssueTicketToUser
             ticket = t;
             ticket.Owner = request.UserId;
             _eventRepository.Update(@event);
-            return ticket;
+
+            return Task.FromResult(ticket);
         }
 
         throw new ScException(message: "No free tickets.");

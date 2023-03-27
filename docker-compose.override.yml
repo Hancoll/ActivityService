@@ -5,10 +5,14 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "DatabaseSettings:ConnectionSting=mongodb://eventdb:27017"
+      - "ServiceEndpoints:ImagesService=http://imagesservice"
     ports:
       - "80"
     depends_on:
       - eventdb
+      - imagesservice
+      - paymentsservice
+      - rabbitmq
 
   eventdb:
     container_name: event_db
@@ -18,9 +22,36 @@ services:
     volumes:
       - eventdb_data:/data/db
 
+  imagesservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "80"
+ 
+  spacesservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "80"
+
+  paymentsservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "80"
+
   jwttokengenerator:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "80"
+
+  rabbitmq:
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    

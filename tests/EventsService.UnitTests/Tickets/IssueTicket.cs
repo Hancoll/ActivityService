@@ -18,9 +18,12 @@ public class IssueTicket
             default,
             default!,
             default!,
+            default!,
             default,
             default,
-            false);
+            default!,
+            default,
+            default);
 
         var command = new IssueTicketToUserCommand(default, default, null);
 

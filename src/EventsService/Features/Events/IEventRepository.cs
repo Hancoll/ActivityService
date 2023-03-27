@@ -1,4 +1,6 @@
-﻿namespace EventsService.Features.Events;
+﻿using MongoDB.Driver;
+
+namespace EventsService.Features.Events;
 
 public interface IEventRepository
 {
@@ -10,7 +12,11 @@ public interface IEventRepository
 
     void Delete(Guid id);
 
+    void Delete(FilterDefinition<Event> filter);
+
     void Update(Event @event);
+
+    void Update(FilterDefinition<Event> filter, UpdateDefinition<Event> update);
 
     bool IsExists(Guid id);
 }

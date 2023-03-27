@@ -1,30 +1,30 @@
 ﻿using EventsService.Services;
+using EventsService.Services.Images;
+using EventsService.Services.Payments;
+using EventsService.Services.Spaces;
+using EventsService.Services.Users;
 using Moq;
 
 namespace EventsService.Extensions;
 
 public static class ServicesExtension
 {
-    public static IServiceCollection AddServices(this IServiceCollection services)
+    public static IServiceCollection AddServices(this IServiceCollection services, ConfigurationManager configuration)
     {
-        var imagesServiceMock = new Mock<IImagesService>();
-        var imageId = Guid.NewGuid();
-        imagesServiceMock.Setup(x => x.GetRandomImageId()).Returns(imageId);
-        imagesServiceMock.Setup(x => x.IsImageExists(imageId)).Returns(true);
-
-        var roomsServiceMock = new Mock<IRoomsService>();
-        var roomsId = Guid.NewGuid();
-        roomsServiceMock.Setup(x => x.GetRandomRoomId()).Returns(roomsId);
-        roomsServiceMock.Setup(x => x.IsRoomExists(roomsId)).Returns(true);
+        services.Configure<ServiceEndpoints>(configuration.GetSection(ServiceEndpoints.SectionName));
 
         var usersServiceMock = new Mock<IUsersService>();
         var user = new User("user3243223");
         usersServiceMock.Setup(x => x.GetRandomUser()).Returns(user);
         usersServiceMock.Setup(x => x.IsExists(user.Id)).Returns(true);
 
-        services.AddSingleton<IImagesService>(imagesServiceMock.Object);
-        services.AddSingleton<IRoomsService>(roomsServiceMock.Object);
-        services.AddSingleton<IUsersService>(usersServiceMock.Object);
+        services.AddSingleton(usersServiceMock.Object);
+
+        services.AddTransient<BaseHandler>();
+
+        services.AddHttpClient<ISpacesService, SpacesService>().AddHttpMessageHandler<BaseHandler>();
+        services.AddHttpClient<IImagesService, ImagesService>().AddHttpMessageHandler<BaseHandler>();
+        services.AddHttpClient<IPaymentsService, PaymentService>().AddHttpMessageHandler<BaseHandler>();
 
         return services;
     }

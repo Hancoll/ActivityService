@@ -6,7 +6,7 @@ namespace EventsService.Features.Events;
 public class Event
 {
     [BsonId]
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
 
     public DateTime StartDateTime { get; set; }
 
@@ -16,26 +16,31 @@ public class Event
 
     public string Description { get; set; }
 
-    public Guid PreviewImageId { get; set; }
+    public Guid? PreviewImageId { get; set; }
 
-    public Guid RoomId { get; set; }
+    public Guid SpaceId { get; set; }
 
     /// <summary>
     /// Есть ли у билетов на мероприятие места
     /// </summary>
     public bool HasPlaces { get; set; }
 
-    public List<Ticket> Tickets { get; set; } = new();
+    public List<Ticket> Tickets { get; set; }
 
-    public Event(DateTime startDateTime, DateTime endDateTime, string name, string description, Guid previewImageId, Guid roomId, bool hasPlaces)
+    public decimal? Price { get; set; }
+
+    public Event(Guid id, DateTime startDateTime, DateTime endDateTime, string name, string description, Guid? previewImageId, Guid spaceId, List<Ticket> tickets, bool hasPlaces, decimal? price)
     {
+        Id = id;
         StartDateTime = startDateTime;
         EndDateTime = endDateTime;
         Name = name;
         Description = description;
         PreviewImageId = previewImageId;
-        RoomId = roomId;
+        SpaceId = spaceId;
+        Tickets = tickets;
         HasPlaces = hasPlaces;
+        Price = price;
     }
 }
 

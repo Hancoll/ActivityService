@@ -1,5 +1,6 @@
 ﻿using EventsService.Features.Events.AddEvent;
-using EventsService.Services;
+using EventsService.Services.Images;
+using EventsService.Services.Spaces;
 using Moq;
 
 namespace EventsService.UnitTests.Events;
@@ -7,7 +8,7 @@ namespace EventsService.UnitTests.Events;
 public class AddEvent
 {
     private readonly Mock<IImagesService> _imagesServiceMock;
-    private readonly Mock<IRoomsService> _roomsServiceMock;
+    private readonly Mock<ISpacesService> _spacesServiceMock;
 
     [Fact]
     public void Validator_Should_ReturnFailureResult_WhenImageOrRoomIsNotExists()
@@ -24,12 +25,13 @@ public class AddEvent
             "Some desc",
             imageGuid,
             roomGuid,
-            false);
+            false,
+            null);
 
-        _imagesServiceMock.Setup(x => x.IsImageExists(It.IsAny<Guid>())).Returns(false);
-        _roomsServiceMock.Setup(x => x.IsRoomExists(It.IsAny<Guid>())).Returns(false);
+        _imagesServiceMock.Setup(x => x.IsImageExists(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+        _spacesServiceMock.Setup(x => x.IsSpaceExists(It.IsAny<Guid>())).Returns(Task.FromResult(false));
 
-        var validator = new AddEventCommandValidator(_imagesServiceMock.Object, _roomsServiceMock.Object);
+        var validator = new AddEventCommandValidator(_imagesServiceMock.Object, _spacesServiceMock.Object);
 
         // Act
 
@@ -55,12 +57,13 @@ public class AddEvent
             "Some desc",
             Guid.NewGuid(),
             Guid.NewGuid(),
-            false);
+            false,
+            null);
 
-        _imagesServiceMock.Setup(x => x.IsImageExists(It.IsAny<Guid>())).Returns(true);
-        _roomsServiceMock.Setup(x => x.IsRoomExists(It.IsAny<Guid>())).Returns(true);
+        _imagesServiceMock.Setup(x => x.IsImageExists(It.IsAny<Guid>())).Returns(Task.FromResult(false));
+        _spacesServiceMock.Setup(x => x.IsSpaceExists(It.IsAny<Guid>())).Returns(Task.FromResult(true));
 
-        var validator = new AddEventCommandValidator(_imagesServiceMock.Object, _roomsServiceMock.Object);
+        var validator = new AddEventCommandValidator(_imagesServiceMock.Object, _spacesServiceMock.Object);
 
         // Act
 
@@ -74,6 +77,6 @@ public class AddEvent
     public AddEvent()
     {
         _imagesServiceMock = new Mock<IImagesService>();
-        _roomsServiceMock = new Mock<IRoomsService>();
+        _spacesServiceMock = new Mock<ISpacesService>();
     }
 }

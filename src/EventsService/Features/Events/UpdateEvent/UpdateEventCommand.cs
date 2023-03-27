@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using EventsService.Features.Tickets;
+using MediatR;
 
 namespace EventsService.Features.Events.UpdateEvent;
 
@@ -8,6 +9,8 @@ public record UpdateEventCommand(
     DateTime EndDateTime,
     string Name,
     string Description,
-    Guid PreviewImageId,
+    Guid? PreviewImageId,
     Guid RoomId,
-    bool HasPlaces) : IRequest<Event>;
+    List<Ticket> Tickets,
+    bool HasPlaces,
+    decimal? Price) : IRequest<Event>;

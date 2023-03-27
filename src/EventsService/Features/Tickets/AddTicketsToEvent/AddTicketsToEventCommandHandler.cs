@@ -9,7 +9,7 @@ public class AddTicketsToEventCommandHandler : IRequestHandler<AddTicketsToEvent
 {
     private readonly IEventRepository _eventRepository;
 
-    public async Task Handle(AddTicketsToEventCommand request, CancellationToken cancellationToken)
+    public Task Handle(AddTicketsToEventCommand request, CancellationToken cancellationToken)
     {
         var @event = _eventRepository.GetEvent(request.EventId);
 
@@ -27,6 +27,8 @@ public class AddTicketsToEventCommandHandler : IRequestHandler<AddTicketsToEvent
 
         @event.Tickets = tickets;
         _eventRepository.Update(@event);
+
+        return Task.CompletedTask;
     }
 
     public AddTicketsToEventCommandHandler(IEventRepository eventRepository)

@@ -1,11 +1,5 @@
 # EventsService
 
-## Запуск
-
-```
-docker compose up
-```
-
 ## JwtTokenGenerator Api
 
 Register User

@@ -1,8 +1,8 @@
-﻿using EventsService.Features.Events.AddEvent;
+﻿using AutoMapper;
+using EventsService.Features.Events.AddEvent;
 using EventsService.Features.Events.DeleteEvent;
 using EventsService.Features.Events.GetEvents;
 using EventsService.Features.Events.UpdateEvent;
-using EventsService.Features.Tickets;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SC.Internship.Common.ScResult;
@@ -15,12 +15,12 @@ namespace EventsService.Features.Events;
 public class EventsController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<EventsController> _logger;
+    private readonly IMapper _mapper;
 
-    public EventsController(IMediator mediator, ILogger<EventsController> logger)
+    public EventsController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
-        _logger = logger;
+        _mapper = mapper;
     }
 
     /// <summary>
@@ -30,27 +30,12 @@ public class EventsController : ControllerBase
     /// <response code="400">Validation fault</response>
     [HttpPost]
     [ProducesResponseType(typeof(Event), 200)]
-    public async Task<ScResult<Event>> AddEvent(EventRequest request)
+    public async Task<ScResult<Event>> AddEvent(AddEventRequest request)
     {
-        var command = new AddEventCommand(request.StartDateTime, request.EndDateTime, request.Name,
-            request.Description, request.PreviewImageId, request.RoomId, request.HasPlaces, request.Price);
+        var command = _mapper.Map<AddEventCommand>(request);
         var addEventResult = await _mediator.Send(command);
 
-        var response = new Event(
-            addEventResult.Id,
-            addEventResult.StartDateTime,
-            addEventResult.EndDateTime,
-            addEventResult.Name,
-            addEventResult.Description,
-            addEventResult.PreviewImageId,
-            addEventResult.SpaceId,
-            addEventResult.Tickets.Select(ticket => new Ticket { Id = ticket.Id, Owner = ticket.Owner, Place = ticket.Place }).ToList(),
-            addEventResult.HasPlaces,
-            addEventResult.Price);
-
-        _logger.LogInformation($"Event {response.Id} added");
-
-        return new ScResult<Event>(response);
+        return new ScResult<Event>(addEventResult);
     }
 
     /// <summary>
@@ -60,36 +45,15 @@ public class EventsController : ControllerBase
     /// <response code="400">Validation fault</response>
     [ProducesResponseType(typeof(Event), 200)]
     [HttpPut("{eventId:guid}")]
-    public async Task<ScResult<Event>> UpdateEvent(Guid eventId, EventRequest request)
+    public async Task<ScResult<Event>> UpdateEvent(Guid eventId, UpdateEventRequest request)
     {
-        var command = new UpdateEventCommand(
-            eventId,
-            request.StartDateTime,
-            request.EndDateTime,
-            request.Name,
-            request.Description,
-            request.PreviewImageId,
-            request.RoomId,
-            request.Tickets,
-            request.HasPlaces,    
-            request.Price);
+        var command = _mapper.Map<UpdateEventCommand>(request, opt =>
+        {
+            opt.AfterMap((src, dest) => dest.Id = eventId);
+        });
         var updateEventResult = await _mediator.Send(command);
 
-        var response = new Event(
-            updateEventResult.Id,
-            updateEventResult.StartDateTime,
-            updateEventResult.EndDateTime,
-            updateEventResult.Name,
-            updateEventResult.Description,
-            updateEventResult.PreviewImageId,
-            updateEventResult.SpaceId,
-            updateEventResult.Tickets.Select(ticket => new Ticket { Id = ticket.Id, Owner = ticket.Owner, Place = ticket.Place }).ToList(),
-            updateEventResult.HasPlaces,
-            updateEventResult.Price);
-
-        _logger.LogInformation($"Event {response.Id} updated");
-
-        return new ScResult<Event>(response);
+        return new ScResult<Event>(updateEventResult);
     }
 
     /// <summary>
@@ -102,8 +66,6 @@ public class EventsController : ControllerBase
         var command = new DeleteEventCommand(eventId);
         await _mediator.Send(command);
 
-        _logger.LogInformation($"Event {eventId} deleted");
-
         return new ScResult();
     }
 
@@ -115,22 +77,9 @@ public class EventsController : ControllerBase
     [HttpGet]
     public async Task<ScResult<IEnumerable<Event>>> GetEvents([FromQuery] GetEventsRequest request)
     {
-        var query = new GetEventsQuery(request.StartDateTime, request.EndDateTime, request.From, request.Size);
+        var query = _mapper.Map<GetEventsQuery>(request);
         var getEventsResult = await _mediator.Send(query);
 
-        var response = getEventsResult.
-            Select(@event => new Event(
-                @event.Id,
-                @event.StartDateTime,
-                @event.EndDateTime,
-                @event.Name,
-                @event.Description,
-                @event.PreviewImageId,
-                @event.SpaceId,
-                @event.Tickets.Select(ticket => new Ticket { Id = ticket.Id, Owner = ticket.Owner, Place = ticket.Place }).ToList(),
-                @event.HasPlaces,
-                @event.Price));
-
-        return new ScResult<IEnumerable<Event>>(response);
+        return new ScResult<IEnumerable<Event>>(getEventsResult);
     }
 }

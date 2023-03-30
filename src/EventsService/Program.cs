@@ -11,21 +11,12 @@ builder.Services
     .AddServices(builder.Configuration)
     .AddPersistence(builder.Configuration)
     .AddAuth(builder.Configuration);
+
 builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
-// Cors
-const string allowSpecificationOrigins = "_allowSpecificationOrigins";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: allowSpecificationOrigins, b =>
-    {
-        b.AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
 
+// Swagger
 builder.Services.AddSwaggerGen(options =>
 {
     var file = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -62,12 +53,20 @@ builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection(Ra
 builder.Services.AddHostedService<RabbitMqListener>();
 builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
 
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseCors(allowSpecificationOrigins);
+app.UseCors(c =>
+{
+    c.AllowAnyHeader();
+    c.AllowAnyMethod();
+    c.AllowAnyOrigin();
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

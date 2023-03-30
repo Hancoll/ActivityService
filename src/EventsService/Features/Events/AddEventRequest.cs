@@ -2,13 +2,12 @@
 
 namespace EventsService.Features.Events;
 
-public record EventRequest(
+public record AddEventRequest(
     DateTime StartDateTime,
     DateTime EndDateTime,
     string Name,
     string Description,
     Guid? PreviewImageId,
-    Guid RoomId,
-    List<Ticket> Tickets,
+    Guid SpaceId,
     bool HasPlaces,
     decimal? Price);

@@ -12,9 +12,9 @@ public class Event
 
     public DateTime EndDateTime { get; set; }
 
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public string Description { get; set; }
+    public string Description { get; set; } = null!;
 
     public Guid? PreviewImageId { get; set; }
 
@@ -25,22 +25,8 @@ public class Event
     /// </summary>
     public bool HasPlaces { get; set; }
 
-    public List<Ticket> Tickets { get; set; }
+    public List<Ticket> Tickets { get; set; } = new();
 
     public decimal? Price { get; set; }
-
-    public Event(Guid id, DateTime startDateTime, DateTime endDateTime, string name, string description, Guid? previewImageId, Guid spaceId, List<Ticket> tickets, bool hasPlaces, decimal? price)
-    {
-        Id = id;
-        StartDateTime = startDateTime;
-        EndDateTime = endDateTime;
-        Name = name;
-        Description = description;
-        PreviewImageId = previewImageId;
-        SpaceId = spaceId;
-        Tickets = tickets;
-        HasPlaces = hasPlaces;
-        Price = price;
-    }
 }
 

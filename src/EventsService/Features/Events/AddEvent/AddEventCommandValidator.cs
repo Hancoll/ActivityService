@@ -13,8 +13,8 @@ public class AddEventCommandValidator : AbstractValidator<AddEventCommand>
         RuleFor(x => x.Name).NotEmpty().MinimumLength(4);
         RuleFor(x => x.StartDateTime).NotEmpty();
         RuleFor(x => x.EndDateTime).GreaterThan(x => x.StartDateTime).NotEmpty();
-        RuleFor(x => x.RoomId).NotEmpty();
-        RuleFor(x => x.RoomId).Must(x => spacesService.IsSpaceExists(x).Result)
+        RuleFor(x => x.SpaceId).NotEmpty();
+        RuleFor(x => x.SpaceId).Must(x => spacesService.IsSpaceExists(x).Result)
             .WithMessage("Room does not exists.");
         RuleFor(x => x.PreviewImageId)
             .Must(x => imagesService.IsImageExists((Guid)x!).Result)

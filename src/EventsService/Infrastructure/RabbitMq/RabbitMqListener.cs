@@ -21,13 +21,17 @@ public class RabbitMqListener : BackgroundService
     {
         _mediator = mediator;
 
-        var hostName = options.Value.HostName;
+        var rabbitMqSettings = options.Value;
         _commonQueueName = options.Value.CommonQueueName;
 
         var factory = new ConnectionFactory
         {
-            HostName = hostName
+            HostName = rabbitMqSettings.HostName,
+            UserName = rabbitMqSettings.UserName,
+            Password = rabbitMqSettings.Password,
+            RequestedHeartbeat = TimeSpan.FromSeconds(60)
         };
+        
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
         _channel.QueueDeclare(queue: _commonQueueName, durable: false, exclusive: false, autoDelete: false);

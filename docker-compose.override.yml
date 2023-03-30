@@ -6,8 +6,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "DatabaseSettings:ConnectionSting=mongodb://eventdb:27017"
       - "ServiceEndpoints:ImagesService=http://imagesservice"
+    restart: always
     ports:
-      - "80"
+      - "8080:80"
     depends_on:
       - eventdb
       - imagesservice
@@ -48,10 +49,15 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
     ports:
-      - "80"
+      - "8081:80"
 
   rabbitmq:
+    hostname: rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
     ports:
-      - "15672:15672"
       - "5672:5672"
+      - "15672:15672"
     

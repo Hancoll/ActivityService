@@ -7,12 +7,12 @@ namespace EventsService.Infrastructure.RabbitMq;
 
 public class RabbitMqService : IRabbitMqService
 {
-    private readonly string _hostName;
+    private readonly RabbitMqSettings _rabbitMqSettings;
     private readonly string _commonQueueName;
 
     public RabbitMqService(IOptions<RabbitMqSettings> options)
     {
-        _hostName = options.Value.HostName;
+        _rabbitMqSettings = options.Value;
         _commonQueueName = options.Value.CommonQueueName;
     }
 
@@ -26,7 +26,9 @@ public class RabbitMqService : IRabbitMqService
     {
         var factory = new ConnectionFactory
         {
-            HostName = _hostName
+            HostName = _rabbitMqSettings.HostName,
+            UserName = _rabbitMqSettings.UserName,
+            Password = _rabbitMqSettings.Password
         };
         using var connection = factory.CreateConnection();
         using var channel = connection.CreateModel();

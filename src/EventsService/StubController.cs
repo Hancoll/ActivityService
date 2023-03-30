@@ -54,7 +54,7 @@ public class StubController : ControllerBase
     /// <summary>
     /// Поместить в очередь RabbitMq ImageDeleteEvent
     /// </summary>
-    [HttpPost("createImageDeleteEvent")]
+    [HttpPost("imageDeleteEvent")]
     public ScResult CreateImageDeleteEvent(Guid imageId)
     {
         var imageDeleteEvent = new ImageDeleteEvent(imageId);
@@ -66,7 +66,7 @@ public class StubController : ControllerBase
     /// <summary>
     /// Поместить в очередь RabbitMq SpaceDeleteEvent
     /// </summary>
-    [HttpPost("createSpaceDeleteEvent")]
+    [HttpPost("spaceDeleteEvent")]
     public ScResult CreateSpaceDeleteEvent(Guid spaceId)
     {
         var spaceDeleteEvent = new SpaceDeleteEvent(spaceId);

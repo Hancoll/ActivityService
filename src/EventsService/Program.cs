@@ -58,6 +58,8 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();
 
+app.UseHttpLogging();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 

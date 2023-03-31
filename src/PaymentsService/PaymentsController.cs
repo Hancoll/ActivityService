@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SC.Internship.Common.ScResult;
 
 namespace PaymentsService;
 
@@ -6,10 +7,10 @@ namespace PaymentsService;
 [ApiController]
 public class PaymentsController : ControllerBase
 {
-    private readonly List<PaymentOperation> _paymentOperations = new();
-
-    [HttpPost("create")]
-    public IActionResult CreatePaymentOperation()
+    private static readonly List<PaymentOperation> PaymentOperations = new();
+    
+    [HttpPost]
+    public ScResult<Guid> CreatePaymentOperation()
     {
         var id = Guid.NewGuid();
 
@@ -20,30 +21,30 @@ public class PaymentsController : ControllerBase
             DateCreation = DateTime.UtcNow
         };
 
-        _paymentOperations.Add(paymentOperation);
+        PaymentOperations.Add(paymentOperation);
 
-        return Ok(id);
+        return new ScResult<Guid>(id);
     }
 
-    [HttpPost("confirm/{paymentId:guid}")]
-    public IActionResult ConfirmPaymentOperation(Guid paymentId)
+    [HttpPost("confirmation/{paymentId:guid}")]
+    public ScResult ConfirmPaymentOperation(Guid paymentId)
     {
-        var paymentOperation = _paymentOperations.First(x => x.Id == paymentId);
+        var paymentOperation = PaymentOperations.First(x => x.Id == paymentId);
 
         paymentOperation.State = PaymentState.Confirmed;
         paymentOperation.DateConfirmation = DateTime.UtcNow;
 
-        return Ok();
+        return new ScResult();
     }
 
-    [HttpPost("cancel/{paymentId:guid}")]
-    public IActionResult CancelPaymentOperation(Guid paymentId)
+    [HttpPost("cancellation/{paymentId:guid}")]
+    public ScResult CancelPaymentOperation(Guid paymentId)
     {
-        var paymentOperation = _paymentOperations.First(x => x.Id == paymentId);
+        var paymentOperation = PaymentOperations.First(x => x.Id == paymentId);
 
         paymentOperation.State = PaymentState.Canceled;
         paymentOperation.DateCancellation = DateTime.UtcNow;
 
-        return Ok();
+        return new ScResult();
     }
 }

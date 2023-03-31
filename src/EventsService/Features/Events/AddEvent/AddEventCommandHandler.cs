@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using AutoMapper;
+using JetBrains.Annotations;
 using MediatR;
 
 namespace EventsService.Features.Events.AddEvent;
@@ -7,28 +8,22 @@ namespace EventsService.Features.Events.AddEvent;
 public class AddEventCommandHandler : IRequestHandler<AddEventCommand, Event>
 {
     private readonly IEventRepository _eventRepository;
+    private readonly IMapper _mapper;
 
     public Task<Event> Handle(AddEventCommand command, CancellationToken cancellationToken)
     {
-        var eventEntity = new Event(
-            Guid.NewGuid(),
-            command.StartDateTime,
-            command.EndDateTime,
-            command.Name,
-            command.Description,
-            command.PreviewImageId,
-            command.RoomId,
-            new List<Tickets.Ticket>(),
-            command.HasPlaces,
-            command.Price);
+        var @event = _mapper.Map<Event>(command, opt =>
+        {
+            opt.AfterMap((_, dest) => dest.Id = Guid.NewGuid());
+        });
+        _eventRepository.Add(@event);
 
-        _eventRepository.Add(eventEntity);
-
-        return Task.FromResult(eventEntity);
+        return Task.FromResult(@event);
     }
 
-    public AddEventCommandHandler(IEventRepository eventRepository)
+    public AddEventCommandHandler(IEventRepository eventRepository, IMapper mapper)
     {
         _eventRepository = eventRepository;
+        _mapper = mapper;
     }
 }

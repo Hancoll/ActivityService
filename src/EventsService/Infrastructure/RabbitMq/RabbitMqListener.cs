@@ -20,25 +20,40 @@ public class RabbitMqListener : BackgroundService
     public RabbitMqListener(IMediator mediator, IOptions<RabbitMqSettings> options)
     {
         _mediator = mediator;
-
-        var hostName = options.Value.HostName;
+        var rabbitMqSettings = options.Value;
         _commonQueueName = options.Value.CommonQueueName;
 
         var factory = new ConnectionFactory
         {
-            HostName = hostName
+            HostName = rabbitMqSettings.HostName,
+            UserName = rabbitMqSettings.UserName,
+            Password = rabbitMqSettings.Password,
+            RequestedHeartbeat = TimeSpan.FromSeconds(60)
         };
-        _connection = factory.CreateConnection();
+
+        // Создание соединения
+
+        while (_connection is null)
+        {
+            try
+            {
+                _connection = factory.CreateConnection();
+            }
+
+            catch
+            {
+                Thread.Sleep(3000);
+            }
+        }
+
         _channel = _connection.CreateModel();
         _channel.QueueDeclare(queue: _commonQueueName, durable: false, exclusive: false, autoDelete: false);
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        stoppingToken.ThrowIfCancellationRequested();
-
         var consumer = new EventingBasicConsumer(_channel);
-        consumer.Received += async (ch, ea) =>
+        consumer.Received += async (_, ea) =>
         {
             var content = Encoding.UTF8.GetString(ea.Body.ToArray());
 

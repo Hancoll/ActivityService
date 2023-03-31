@@ -8,6 +8,6 @@ public record AddEventCommand(
     string Name,
     string Description,
     Guid? PreviewImageId,
-    Guid RoomId,
+    Guid SpaceId,
     bool HasPlaces,
     decimal? Price) : IRequest<Event>;

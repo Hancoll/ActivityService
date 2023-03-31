@@ -13,13 +13,7 @@ public class HasUserTicketToEventQueryHandler : IRequestHandler<HasUserTicketToE
     {
         var eventTickets = _eventRepository.GetEvent(request.EventId).Tickets;
 
-        foreach (var ticket in eventTickets)
-        {
-            if (ticket.Owner == request.UserId)
-                return Task.FromResult(true);
-        }
-
-        return Task.FromResult(false);
+        return Task.FromResult(eventTickets.Any(ticket => ticket.Owner == request.UserId));
     }
 
     public HasUserTicketToEventQueryHandler(IEventRepository eventRepository)

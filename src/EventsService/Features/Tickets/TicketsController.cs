@@ -14,12 +14,10 @@ namespace EventsService.Features.Tickets;
 public class TicketsController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<TicketsController> _logger;
 
-    public TicketsController(IMediator mediator, ILogger<TicketsController> logger)
+    public TicketsController(IMediator mediator)
     {
         _mediator = mediator;
-        _logger = logger;
     }
 
     /// <summary>
@@ -30,8 +28,6 @@ public class TicketsController : ControllerBase
     {
         var command = new AddTicketsToEventCommand(eventId, request.Count);
         await _mediator.Send(command);
-
-        _logger.LogInformation($"Tickets added to event {eventId}");
 
         return new ScResult();
     }
@@ -45,37 +41,19 @@ public class TicketsController : ControllerBase
         var command = new IssueTicketToUserCommand(userId, eventId, request.Place);
         var issueTicketResult = await _mediator.Send(command);
 
-        var response = new Ticket 
-        { 
-            Id = issueTicketResult.Id,  
-            Owner = issueTicketResult.Owner, 
-            Place = issueTicketResult.Place 
-        };
-
-        _logger.LogInformation($"Ticket issued to user {userId} to event {eventId}");
-
-        return new ScResult<Ticket>(response);
+        return new ScResult<Ticket>(issueTicketResult);
     }
 
     /// <summary>
     /// Продать билет пользователю на мероприятие
     /// </summary>
-    [HttpPost("users/{userId:guid}/events/{eventId:guid}/sell")]
+    [HttpPost("users/{userId:guid}/events/{eventId:guid}/sale")]
     public async Task<ScResult<Ticket>> SellTicket(Guid userId, Guid eventId, IssueTicketRequest request)
     {
         var command = new SellTicketToUserCommand(userId, eventId, request.Place);
         var sellTicketResult = await _mediator.Send(command);
 
-        var response = new Ticket
-        {
-            Id = sellTicketResult.Id,
-            Owner = sellTicketResult.Owner,
-            Place = sellTicketResult.Place
-        };
-
-        _logger.LogInformation($"Ticket sold to user {userId} to event {eventId}");
-
-        return new ScResult<Ticket>(response);
+        return new ScResult<Ticket>(sellTicketResult);
     }
 
     /// <summary>

@@ -14,8 +14,8 @@ public class UpdateEventCommandValidator : AbstractValidator<UpdateEventCommand>
         RuleFor(x => x.Name).NotEmpty();
         RuleFor(x => x.StartDateTime).NotEmpty();
         RuleFor(x => x.EndDateTime).GreaterThan(x => x.StartDateTime).NotEmpty();
-        RuleFor(x => x.RoomId).NotEmpty();
-        RuleFor(x => x.RoomId).Must(x => spacesService.IsSpaceExists(x).Result)
+        RuleFor(x => x.SpaceId).NotEmpty();
+        RuleFor(x => x.SpaceId).Must(x => spacesService.IsSpaceExists(x).Result)
             .WithMessage("Room does not exists.");
         RuleFor(x => x.PreviewImageId)
             .Must(x => imagesService.IsImageExists((Guid)x!).Result)

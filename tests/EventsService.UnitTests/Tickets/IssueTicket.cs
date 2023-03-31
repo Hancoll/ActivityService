@@ -1,6 +1,7 @@
 ﻿using EventsService.Features.Events;
 using EventsService.Features.Tickets.IssueTicketToUser;
 using Moq;
+using SC.Internship.Common.Exceptions;
 
 namespace EventsService.UnitTests.Tickets;
 
@@ -13,40 +14,16 @@ public class IssueTicket
     {
         // Arrange
 
-        var @event = new Event(
-            default,
-            default,
-            default!,
-            default!,
-            default!,
-            default,
-            default,
-            default!,
-            default,
-            default);
-
+        var @event = new Event();
         var command = new IssueTicketToUserCommand(default, default, null);
 
         _eventRepositoryMock.Setup(x => x.GetEvent(It.IsAny<Guid>())).Returns(@event);
 
         var handler = new IssueTicketToUserCommandHandler(_eventRepositoryMock.Object);
 
-        // Act
+        // Act & Assert
 
-        try
-        {
-            await handler.Handle(command, default);
-        }
-
-        // Assert
-
-        catch
-        {
-            Assert.True(true);
-            return;
-        }
-
-        Assert.True(false);
+        await Assert.ThrowsAsync<ScException>(() => handler.Handle(command, default));
     }
 
     public IssueTicket()

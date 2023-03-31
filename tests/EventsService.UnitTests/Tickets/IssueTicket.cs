@@ -13,17 +13,7 @@ public class IssueTicket
     {
         // Arrange
 
-        var @event = new Event(
-            default,
-            default,
-            default!,
-            default!,
-            default!,
-            default,
-            default,
-            default!,
-            default,
-            default);
+        var @event = new Event();
 
         var command = new IssueTicketToUserCommand(default, default, null);
 

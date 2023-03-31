@@ -21,40 +21,37 @@ public class StubController : ControllerBase
     /// <summary>
     /// Получить Id существующего изображения
     /// </summary>
-    [HttpGet("image")]
+    [HttpGet("images")]
     public ScResult<Guid> GetImageId()
     {
         var result = _imagesService.GetRandomImageId();
-
         return new ScResult<Guid>(result.Result);
     }
 
     /// <summary>
     /// Получить Id существующего пространства
     /// </summary>
-    [HttpGet("space")]
+    [HttpGet("spaces")]
     public ScResult<Guid> GetSpaceId()
     {
         var result = _spacesService.GetRandomSpaceId();
-
         return new ScResult<Guid>(result.Result);
     }
 
     /// <summary>
     /// Получить Id существующего пользователя
     /// </summary>
-    [HttpGet("user")]
+    [HttpGet("users")]
     public ScResult<User> GetUser()
     {
         var result = _usersService.GetRandomUser();
-
         return new ScResult<User>(result);
     }
 
     /// <summary>
     /// Поместить в очередь RabbitMq ImageDeleteEvent
     /// </summary>
-    [HttpPost("imageDeleteEvent")]
+    [HttpPost("imageDeleteEvents")]
     public ScResult CreateImageDeleteEvent(Guid imageId)
     {
         var imageDeleteEvent = new ImageDeleteEvent(imageId);
@@ -66,7 +63,7 @@ public class StubController : ControllerBase
     /// <summary>
     /// Поместить в очередь RabbitMq SpaceDeleteEvent
     /// </summary>
-    [HttpPost("spaceDeleteEvent")]
+    [HttpPost("spaceDeleteEvents")]
     public ScResult CreateSpaceDeleteEvent(Guid spaceId)
     {
         var spaceDeleteEvent = new SpaceDeleteEvent(spaceId);

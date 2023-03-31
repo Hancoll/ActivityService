@@ -12,7 +12,7 @@ public class PaymentOperation
 
     public DateTime DateCancellation { get; set; }
 
-    //public string Description { get; set; } = null!;
+    public string Description { get; set; } = null!;
 }
 
 public enum PaymentState { Hold, Confirmed, Canceled }

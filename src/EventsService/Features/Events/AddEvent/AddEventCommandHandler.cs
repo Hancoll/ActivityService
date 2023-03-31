@@ -14,7 +14,7 @@ public class AddEventCommandHandler : IRequestHandler<AddEventCommand, Event>
     {
         var @event = _mapper.Map<Event>(command, opt =>
         {
-            opt.AfterMap((src, dest) => dest.Id = Guid.NewGuid());
+            opt.AfterMap((_, dest) => dest.Id = Guid.NewGuid());
         });
         _eventRepository.Add(@event);
 

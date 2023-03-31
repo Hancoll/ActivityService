@@ -15,7 +15,7 @@ public class TicketsController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public TicketsController(IMediator mediator, ILogger<TicketsController> logger)
+    public TicketsController(IMediator mediator)
     {
         _mediator = mediator;
     }

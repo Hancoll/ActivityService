@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using SC.Internship.Common.ScResult;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,13 +25,17 @@ app.UseAuthorization();
 
 var images = new List<Guid>();
 
-app.MapGet("/GetRandomImageId", () =>
+app.MapGet("/", () =>
 {
     var imageId = Guid.NewGuid();
     images.Add(imageId);
-    return imageId;
+    return new ScResult<Guid>(imageId);
 }).RequireAuthorization();
 
-app.MapGet("/IsImageExists", (Guid imageId) => images.Contains(imageId)).RequireAuthorization();
+app.MapGet("/existence", (Guid imageId) =>
+{
+    var result = images.Contains(imageId);
+    return new ScResult<bool>(result);
+}).RequireAuthorization();
 
 app.Run();

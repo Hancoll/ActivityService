@@ -1,36 +1,31 @@
 ﻿using Microsoft.Extensions.Options;
-using Polly;
-using Polly.Retry;
+using SC.Internship.Common.ScResult;
 
 namespace EventsService.Services.Images;
 
 public class ImagesService : IImagesService
 {
     private readonly HttpClient _httpClient;
-    private readonly AsyncRetryPolicy<HttpResponseMessage> _asyncRetryPolicy;
+    private readonly ImagesServiceEndpoints _endpoints;
 
-    public ImagesService(HttpClient httpClient, IOptions<ServiceEndpoints> serviceEndpoints)
+    public ImagesService(HttpClient httpClient, IOptions<ImagesServiceEndpoints> options)
     {
         _httpClient = httpClient;
-        var address = serviceEndpoints.Value.ImagesService;
-        _httpClient.BaseAddress = new Uri(address);
+        _endpoints = options.Value;
 
-        _asyncRetryPolicy = Policy<HttpResponseMessage>.Handle<HttpRequestException>()
-            .RetryAsync(retryCount: 3);
+        _httpClient.BaseAddress = new Uri(_endpoints.BaseAddress);
     }
 
-    public async Task<Guid> GetRandomImageId() =>
-        await _httpClient.GetFromJsonAsync<Guid>("GetRandomImageId");
+    public async Task<Guid> GetRandomImageId()
+    {
+        var result = await _httpClient.GetFromJsonAsync<ScResult<Guid>>(_endpoints.Images);
+        return result!.Result;
+    }
 
     public async Task<bool> IsImageExists(Guid id)
     {
-        var httpResponse = await _asyncRetryPolicy.ExecuteAsync(async () =>
-        {
-            var httpResponse = await _httpClient.GetAsync($"IsImageExists?imageId={id}");
-            httpResponse.EnsureSuccessStatusCode();
-            return httpResponse;
-        });
-
-        return await _httpClient.GetFromJsonAsync<bool>($"IsImageExists?imageId={id}");
+        var path = $"{_endpoints.ImageExistence}?imageId={id}";
+        var result = await _httpClient.GetFromJsonAsync<ScResult<bool>>(path);
+        return result!.Result;
     }
 }

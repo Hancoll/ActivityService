@@ -49,7 +49,7 @@ public class EventsController : ControllerBase
     {
         var command = _mapper.Map<UpdateEventCommand>(request, opt =>
         {
-            opt.AfterMap((src, dest) => dest.Id = eventId);
+            opt.AfterMap((_, dest) => dest.Id = eventId);
         });
         var updateEventResult = await _mediator.Send(command);
 

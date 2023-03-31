@@ -17,9 +17,14 @@ public class IssueTicketToUserCommandHandler : IRequestHandler<IssueTicketToUser
 
         if (@event.HasPlaces)
         {
-            if (request.Place is null) throw new ArgumentNullException(nameof(request.Place));
+            if (request.Place is null) 
+                throw new ArgumentNullException(nameof(request.Place));
 
             ticket = @event.Tickets[(int)request.Place - 1];
+
+            if (ticket.Owner is not null)
+                throw new ScException(message: "The ticket already has an owner");
+
             ticket.Place = request.Place;
             ticket.Owner = request.UserId;
             _eventRepository.Update(@event);
@@ -27,11 +32,8 @@ public class IssueTicketToUserCommandHandler : IRequestHandler<IssueTicketToUser
             return Task.FromResult(ticket);
         }
 
-        foreach (var t in @event.Tickets)
+        foreach (var t in @event.Tickets.Where(t => t.Owner is null))
         {
-            if (t.Owner is not null)
-                continue;
-
             ticket = t;
             ticket.Owner = request.UserId;
             _eventRepository.Update(@event);

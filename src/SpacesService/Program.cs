@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using SC.Internship.Common.ScResult;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,13 +25,17 @@ app.UseAuthorization();
 
 var spaces = new List<Guid>();
 
-app.MapGet("/GetRandomSpaceId", () =>
+app.MapGet("/", () =>
 {
     var spaceId = Guid.NewGuid();
     spaces.Add(spaceId);
-    return spaceId;
+    return new ScResult<Guid>(spaceId);
 }).RequireAuthorization();
 
-app.MapGet("/IsSpaceExists", (Guid spaceId) => spaces.Contains(spaceId)).RequireAuthorization();
+app.MapGet("/existence", (Guid spaceId) =>
+{
+    var result = spaces.Contains(spaceId);
+    return new ScResult<bool>(result);
+}).RequireAuthorization();
 
 app.Run();

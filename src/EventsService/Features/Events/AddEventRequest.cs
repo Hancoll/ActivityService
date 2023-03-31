@@ -1,6 +1,4 @@
-﻿using EventsService.Features.Tickets;
-
-namespace EventsService.Features.Events;
+﻿namespace EventsService.Features.Events;
 
 public record AddEventRequest(
     DateTime StartDateTime,

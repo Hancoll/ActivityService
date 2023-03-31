@@ -28,7 +28,7 @@ public class EventsController : ControllerBase
     /// </summary>
     /// <response code="200">Success</response>
     /// <response code="400">Validation fault</response>
-    [HttpPost]
+    [HttpPost("")]
     [ProducesResponseType(typeof(Event), 200)]
     public async Task<ScResult<Event>> AddEvent(AddEventRequest request)
     {
@@ -74,7 +74,7 @@ public class EventsController : ControllerBase
     /// </summary>
     /// <response code="200">Success</response> 
     [ProducesResponseType(typeof(IEnumerable<Event>), 200)]
-    [HttpGet]
+    [HttpGet("")]
     public async Task<ScResult<IEnumerable<Event>>> GetEvents([FromQuery] GetEventsRequest request)
     {
         var query = _mapper.Map<GetEventsQuery>(request);
